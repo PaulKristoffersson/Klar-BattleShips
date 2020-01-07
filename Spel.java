@@ -61,11 +61,13 @@ public class Spel {
 				spelarLista.get(i).printBoard();
 				spelarLista.get(skepp2).printEnemyBoard();
 				x = spelarLista.get(skepp2).skjutKoordinat();
-				if (x==1) {
-					x = spelarLista.get(skepp2).skjutKoordinat()+x;
+				while(x==1) {
+					spelarLista.get(i).setTräffar(spelarLista.get(i).getTräffar() + x);
+					spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
+					System.out.println(spelarLista.get(skepp2).getLiv());
+					x=0;
+					x=spelarLista.get(skepp2).skjutKoordinat();
 				}
-				spelarLista.get(i).setTräffar(spelarLista.get(i).getTräffar() + x);
-				spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
 				System.out.println("\n");
 				statistik(runda, i, skepp2);
 				System.out.println("\n");
@@ -133,10 +135,13 @@ public class Spel {
 					spelarLista.get(i).printBoard();
 					spelarLista.get(skepp2).printEnemyBoard();
 					x = spelarLista.get(skepp2).skjutKoordinat();
-					if (x==1) {
-						x = spelarLista.get(skepp2).skjutKoordinat()+x;
+					while(x==1) {
+						spelarLista.get(i).setTräffar(spelarLista.get(i).getTräffar() + x);
+						spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
+						System.out.println(spelarLista.get(skepp2).getLiv());
+						x=0;
+						x=spelarLista.get(skepp2).skjutKoordinat();
 					}
-					spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
 					System.out.println("\n");
 				}
 
@@ -147,10 +152,13 @@ public class Spel {
 					spelarLista.get(i).printBoard();
 					spelarLista.get(skepp2).printEnemyBoard();
 					x = spelarLista.get(skepp2).skjutKoordinat2();
-					if (x==1) {
-						x = spelarLista.get(skepp2).skjutKoordinat2()+x;
+					while(x==1) {
+						spelarLista.get(i).setTräffar(spelarLista.get(i).getTräffar() + x);
+						spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
+						System.out.println(spelarLista.get(skepp2).getLiv());
+						x=0;
+						x=spelarLista.get(skepp2).skjutKoordinat2();
 					}
-					spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
 					System.out.println("\n");
 				}
 				statistik(runda, i, skepp2);
@@ -207,8 +215,12 @@ public class Spel {
 				spelarLista.get(i).printBoard();
 				spelarLista.get(skepp2).printEnemyBoard();
 				x = spelarLista.get(skepp2).skjutKoordinat2();
-				if (x==1) {
-					x = spelarLista.get(skepp2).skjutKoordinat2()+x;
+				while(x==1) {
+					spelarLista.get(i).setTräffar(spelarLista.get(i).getTräffar() + x);
+					spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
+					System.out.println(spelarLista.get(skepp2).getLiv());
+					x=0;
+					x=spelarLista.get(skepp2).skjutKoordinat2();
 				}
 				spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
 

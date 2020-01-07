@@ -17,29 +17,26 @@ public class Spelare {
 
 	List<Koordinater> båtKoordinater;
 	Skepp skepp = new Skepp(lengd, namn, båtKoordinater);
-
-	List<Skepp> spelarSkepp = new ArrayList<Skepp>();
-
 	LinkedList<Koordinater> träffadeKoordinater = new LinkedList<Koordinater>();
 	private LinkedList<Skepp> skeppar = new LinkedList<Skepp>();
 	private LinkedList<Skepp> skeppar2 = new LinkedList<Skepp>();
-
 	Scanner scan = new Scanner(System.in);
 	LinkedHashMap<Koordinater, Bitar> map = new LinkedHashMap<Koordinater, Bitar>();
 	LinkedHashMap<Koordinater, Bitar> map2 = new LinkedHashMap<Koordinater, Bitar>();
 
+	// Konstruktör för spelare
 	public Spelare(int liv, String namn, int träffar, int totalLiv) {
 		this.liv = liv;
 		this.namn = namn;
 		this.träffar = träffar;
 		this.totalLiv = totalLiv;
 	}
-	
+
 	public String toString() {
 		return ("Namn:" + this.namn + " Liv: " + this.liv + "\n");
 	}
 
-
+	// Metod för att ge spelare namn
 	public String skapaNamn(int x) {
 		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
@@ -48,6 +45,7 @@ public class Spelare {
 		return namn;
 	}
 
+	// Metod för att sätta spelarens liv, baseras på storleken av spelaren skepp
 	public int spelareLiv() {
 		int liv = 0;
 		for (Skepp obj : skeppar) {
@@ -94,18 +92,22 @@ public class Spelare {
 		}
 	}
 
+	// Lägger till de skapade skeppen i en lista
 	public void addSkepp(Skepp c) {
 		skeppar.add(c);
-	}
-
-	public void addKoordinat(Koordinater c) {
-		båtKoordinater.add(c);
 	}
 
 	public void addSkepp2(Skepp c) {
 		skeppar2.add(c);
 	}
 
+	// Lägger till båtens koordinater i en lista
+	public void addKoordinat(Koordinater c) {
+		båtKoordinater.add(c);
+	}
+
+	// Metod för att skapa spelarens skepp, ser till att storleken och antalet
+	// stämmer
 	public void skapaSkepp() {
 		System.out.println("Hur många skepp vill du spela med?");
 		int antalskepp = scan.nextInt();
@@ -123,7 +125,7 @@ public class Spelare {
 
 		for (int i = 0; i <= (antalskepp - 1); i++) {
 			Skepp skepp = new Skepp(lengd, namn, båtKoordinater);
-			System.out.println("Vilken storlek ska skepp " + (i+1) + " ha" + ", 5 är det maxila: ");
+			System.out.println("Vilken storlek ska skepp " + (i + 1) + " ha" + ", 5 är det maxila: ");
 			int storlek2 = scan.nextInt();
 			while (storlek2 < 1 || storlek2 > 5) {
 				System.out.println("Båten har ej en giltlig storlek, välj om den: ");
@@ -134,15 +136,14 @@ public class Spelare {
 			scan.nextLine();
 			System.out.println("Vad ska skeppet heta?");
 			String namn2 = scan.nextLine();
-
 			skepp.setNamn(namn2);
 			addSkepp(skepp);
-			addSkepp2(skepp);
 			printSkepp();
 		}
 	}
-	
 
+	// Metod för att resterande spelare ska kunna kopiera skeppen i listan alla ska
+	// spela med samma, kombineras medd kopieraskepp2
 	public LinkedList<Skepp> kopieraSkepp() {
 		return skeppar;
 	}
@@ -154,6 +155,10 @@ public class Spelare {
 		skeppar.clear();
 	}
 
+	// Metod för att printa brädet. Gör först en outline och printar sedan ut en
+	// Bokstav som börjar på A bredvid 0 sedan B osv..
+	// När det ej finns fler 0 printar den sedan ut nyckeln på position 0-9 som är ~
+	// när ingen båt har placerats
 	public void printBoard() {
 		System.out.println("  | 0 1 2 3 4 5 6 7 8 9");
 		System.out.println("--+--------------------");
@@ -179,6 +184,10 @@ public class Spelare {
 		return map.get(nyckel);
 	}
 
+	// Skapar ett bräde där en mappar Bokstav A-J med sifforna 0-9
+	// Sedan sätter den en value till varje koordinat som representeras med en bit.
+	// Bitarna är det som sedan printas när man visar brädet.
+	// Genom detta kan man enkelt jämföra varje position på brädet med dess innehåll
 	public void newBoard() {
 		int storlek = 10;
 		char temp = 'A';
@@ -193,6 +202,7 @@ public class Spelare {
 
 	}
 
+	// Samma metod som ovan fast ett bräde man skjuter på
 	public void newEnemyBoard() {
 		int storlek = 10;
 		char temp = 'A';
@@ -206,6 +216,7 @@ public class Spelare {
 		}
 	}
 
+	// Samma som printBoard() fast för brädet man skjuter på
 	public void printEnemyBoard() {
 		System.out.println("  | 0 1 2 3 4 5 6 7 8 9");
 		System.out.println("--+--------------------");
@@ -227,6 +238,7 @@ public class Spelare {
 		}
 	}
 
+	// Metod för att välja riktningen båten printas i
 	public boolean riktning() {
 		System.out.println("Ange h för horisontellt eller v för vertikalt: ");
 		@SuppressWarnings("resource")
@@ -243,6 +255,7 @@ public class Spelare {
 		}
 	}
 
+	// Datorns metod för att välja riktning
 	public boolean riktning2() {
 		Random f = new Random();
 		int a = f.nextInt(2);
@@ -253,6 +266,12 @@ public class Spelare {
 		}
 	}
 
+	// Tar in booleans för att definiera vad som fanns på brädet. Ifall den får in c
+	// innebär det att skeppet träffades och sätter då in en etta 1, om d är sann
+	// sätter den 0 och annars ber den en att skjuta om. Kontrollerar även att
+	// skottet som skjuts är korrekt
+	// Även slutsteget för att returna 1 om båt har träffas för att sänka livet på
+	// motståndaren
 	public int markeraSkott(boolean c, boolean d, boolean e, Koordinater replaceCoords) {
 		char miss = '0';
 		char träff = '1';
@@ -265,7 +284,7 @@ public class Spelare {
 			map.put(replaceCoords, boatpiece3);
 			map2.put(replaceCoords, boatpiece3);
 			x = 1;
-			
+
 		}
 
 		if (d == true) {
@@ -279,11 +298,14 @@ public class Spelare {
 		if (e == true) {
 			System.out.println("Du har redan skjutit här. Skjut igen");
 			String koordinat = scan.nextLine();
-			while(!(koordinat.charAt(0)=='A') && !(koordinat.charAt(0)=='B') && !(koordinat.charAt(0)=='C') && !(koordinat.charAt(0)=='D') && !(koordinat.charAt(0)=='E') && !(koordinat.charAt(0)=='F') && !(koordinat.charAt(0)=='G') && !(koordinat.charAt(0)=='H') && !(koordinat.charAt(0)=='I') && !(koordinat.charAt(0)=='J')) {
+			while (!(koordinat.charAt(0) == 'A') && !(koordinat.charAt(0) == 'B') && !(koordinat.charAt(0) == 'C')
+					&& !(koordinat.charAt(0) == 'D') && !(koordinat.charAt(0) == 'E') && !(koordinat.charAt(0) == 'F')
+					&& !(koordinat.charAt(0) == 'G') && !(koordinat.charAt(0) == 'H') && !(koordinat.charAt(0) == 'I')
+					&& !(koordinat.charAt(0) == 'J')) {
 				System.out.println("Nu angav du en felaktig Y koordinat, var vänlig och välj A-J med stor bokstav ");
 				koordinat = scan.nextLine();
 			}
-			while(koordinat.length()>2) {
+			while (koordinat.length() > 2) {
 				System.out.println("Nu angav du en felaktig X koordinat, var vänlig och välj A-J med stor bokstav ");
 				koordinat = scan.nextLine();
 			}
@@ -295,8 +317,9 @@ public class Spelare {
 		return x;
 	}
 
+	// Datorns metod för att markera om skottet träffade, behöver ej innehålla lika
+	// många krav som spelarens
 	public int markeraSkott2(boolean c, boolean d, boolean e, Koordinater replaceCoords) {
-
 		char miss = '0';
 		char träff = '1';
 		int x = 0;
@@ -328,17 +351,22 @@ public class Spelare {
 		return x;
 	}
 
+	// Metod för att spelaren ska skjuta. Kontrollerar användarens input så att den
+	// stämmer och skickar sedan vidare det till skjutSkepp(); Även startmetoden för
+	// att returnera x som minskar motståndarens liv vid träff
 	public int skjutKoordinat() {
 		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Ange vart du vill skjuta");
 		String koordinat = scan.nextLine();
-		System.out.println(koordinat.charAt(1));
-		while(!(koordinat.charAt(0)=='A') && !(koordinat.charAt(0)=='B') && !(koordinat.charAt(0)=='C') && !(koordinat.charAt(0)=='D') && !(koordinat.charAt(0)=='E') && !(koordinat.charAt(0)=='F') && !(koordinat.charAt(0)=='G') && !(koordinat.charAt(0)=='H') && !(koordinat.charAt(0)=='I') && !(koordinat.charAt(0)=='J')) {
+		while (!(koordinat.charAt(0) == 'A') && !(koordinat.charAt(0) == 'B') && !(koordinat.charAt(0) == 'C')
+				&& !(koordinat.charAt(0) == 'D') && !(koordinat.charAt(0) == 'E') && !(koordinat.charAt(0) == 'F')
+				&& !(koordinat.charAt(0) == 'G') && !(koordinat.charAt(0) == 'H') && !(koordinat.charAt(0) == 'I')
+				&& !(koordinat.charAt(0) == 'J')) {
 			System.out.println("Nu angav du en felaktig Y koordinat, var vänlig och välj A-J med stor bokstav ");
 			koordinat = scan.nextLine();
 		}
-		while(koordinat.length()>2) {
+		while (koordinat.length() > 2) {
 			System.out.println("Nu angav du en felaktig X koordinat, var vänlig och välj A-J med stor bokstav ");
 			koordinat = scan.nextLine();
 		}
@@ -346,6 +374,8 @@ public class Spelare {
 		return x;
 	}
 
+	// Datorns sätt att skjuta. Andra krav än spelarens då den skjuter på en random
+	// koordinat. Skickar sedan vidare till datorns metod för att skjuta,
 	public int skjutKoordinat2() {
 		Random r = new Random();
 		char xko = (char) (r.nextInt(10) + 'A');
@@ -357,10 +387,25 @@ public class Spelare {
 		return x;
 	}
 
+	// Kontrollerar ifall ett skepps alla koordinater har blivit träffade. Vid
+	// fallet att det stämmer blir metoden true så att skeppet kan annonseras som
+	// slaktat
 	public boolean slaktatSkepp(LinkedList<Koordinater> träffadeKoordinater) {
 		boolean x = false;
+		String Koordinat = null;
 		for (Skepp obj : skeppar2) {
-			if (obj.toString().equals(träffadeKoordinater.toString())) {
+			LinkedList<Koordinater> sammaKoordinat = new LinkedList<Koordinater>();
+			sammaKoordinat.clear();
+			for (int i = 0; i < träffadeKoordinater.size(); i++) {
+
+				if (obj.toString().contains(träffadeKoordinater.get(i).toString())) {
+
+					sammaKoordinat.add(träffadeKoordinater.get(i));
+				}
+
+			}
+
+			if (obj.toString().equals(sammaKoordinat.toString())) {
 				x = true;
 
 				break;
@@ -368,15 +413,20 @@ public class Spelare {
 			} else {
 				x = false;
 			}
+
 		}
+
 		return x;
 	}
 
+	// Rensar träffade koordinater
 	public LinkedList<Koordinater> clearKoordinater(LinkedList<Koordinater> träffadeKoordinater) {
 		träffadeKoordinater.clear();
 		return träffadeKoordinater;
 	}
 
+	// Kontrollerar om ett skepp finnns på positionen som beskjutits. Annonserar
+	// även om skeppet dött via
 	public void kollaSkepp(String kollaNyckel) {
 		for (Skepp obj : skeppar2) {
 
@@ -386,7 +436,7 @@ public class Spelare {
 
 				if (slaktatSkepp(träffadeKoordinater) == true) {
 					System.out.println("Båt " + obj.getNamn() + " Är sänkt");
-					clearKoordinater(träffadeKoordinater);
+					// clearKoordinater(träffadeKoordinater);
 
 				}
 			}
@@ -682,7 +732,7 @@ public class Spelare {
 		}
 
 		skeppar2.add(new Skepp(storlek, namn, båtKoordinater));
-		
+
 	}
 
 	public String forslag() {

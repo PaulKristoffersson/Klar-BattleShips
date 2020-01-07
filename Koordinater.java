@@ -14,6 +14,7 @@ public class Koordinater {
 		return text.hashCode();
 	}
 	public boolean equals(Object obj) {
+		boolean x = false;
 		if (!(obj instanceof Koordinater)) {
 			return false;
 		}
@@ -21,7 +22,19 @@ public class Koordinater {
 		if (this.text.equals(objWord.text)) {
 			return true;
 		}
-		return false;
+		return x;
 	}
+	
+	/*public boolean contains(Object obj) {
+		boolean x = false;
+		if(!(obj instanceof Koordinater)) {
+			x =  false;
+		}
+		Koordinater objWord = (Koordinater) obj;
+		if(this.text.contains(objWord.text)) {
+			x =  true;
+		}
+		return x;
+	}*/
 
 }
