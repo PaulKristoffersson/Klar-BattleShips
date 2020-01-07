@@ -1,20 +1,26 @@
 package SankaSkepp;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Spel {
+	public ArrayList<String> highscore = new ArrayList<String>();
 	public LinkedList<Spelare> spelarLista = new LinkedList<Spelare>();
 	public LinkedList<Skepp> skeppar = new LinkedList<Skepp>();
 	public LinkedList<Skepp> skeppar2 = new LinkedList<Skepp>();
 	Scanner scan = new Scanner(System.in);
 
-	public Spel() {
-
-	}
-
 	public void startaSpel() {
-		System.out.println("Hur mÃ¥nga spelare vill du ha?");
+
+		System.out.println("Hur många spelare vill du ha?");
 		int antalSpelare = scan.nextInt();
 		if (antalSpelare == 0) {
 			spelaSpelEvE(antalSpelare);
@@ -34,7 +40,6 @@ public class Spel {
 		System.out.println(spelarLista.size());
 		int runda = 1;
 		boolean c = false;
-		boolean d = false;
 
 		int i = 0;
 		int skepp2 = 1;
@@ -43,25 +48,27 @@ public class Spel {
 				if (i == antalSpelare) {
 					i = 0;
 				}
-				System.out.println(skepp2);
 				if (skepp2 == (antalSpelare)) {
 					skepp2 = 0;
 				}
 				int x = 0;
 
-				System.out.println("Det Ã¤r " + spelarLista.get(i).getNamn() + " tur att skjuta");
-				System.out.println(spelarLista.get(i).getNamn() + "s brÃ¤de! ");
+				System.out.println("Det är " + spelarLista.get(i).getNamn() + " tur att skjuta");
+				System.out.println("\n");
+				System.out.println(spelarLista.get(i).getNamn() + "s bräde! ");
+				System.out.println("\n");
 
 				spelarLista.get(i).printBoard();
 				spelarLista.get(skepp2).printEnemyBoard();
 				x = spelarLista.get(skepp2).skjutKoordinat();
-				spelarLista.get(i).setTrÃ¤ffar(spelarLista.get(i).getTrÃ¤ffar()+x);
+				if (x==1) {
+					x = spelarLista.get(skepp2).skjutKoordinat()+x;
+				}
+				spelarLista.get(i).setTräffar(spelarLista.get(i).getTräffar() + x);
 				spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
 				System.out.println("\n");
-				System.out.println(spelarLista.get(skepp2).getLiv());
-				System.out.println(spelarLista.get(skepp2).spelareLiv());
-				statistik(runda,i,skepp2);
-				
+				statistik(runda, i, skepp2);
+				System.out.println("\n");
 				if (fleraSpelare(spelarLista.get(skepp2)) == true) {
 					spelarLista.remove(skepp2);
 					antalSpelare--;
@@ -71,25 +78,30 @@ public class Spel {
 				skepp2 = skepp2 + 1;
 				continue;
 			}
-			System.out.println("Runda " + runda+ " avklarad. HÃ¤r Ã¤r listan av kvarvarande spelar och deras liv: ");
+
+			if (antalSpelare == 1) {
+				System.out.println(spelarLista.get(0).getNamn() + " Är vår vinnare!!!!!!!!");
+
+				break;
+			}
+
+			System.out.println("Runda " + runda + " avklarad. Här är listan av kvarvarande spelar och deras liv: ");
+			System.out.println("\n");
 			runda++;
 			System.out.println(spelarLista);
 			i = 0;
 			skepp2 = 1;
 
-			if (antalSpelare == 1) {
-				System.out.println(spelarLista.get(0).getNamn() + " Ã„r vÃ¥r vinnare!!!!!!!!");
-				break;
-			}
-
 		}
+		spelarLista.clear();
 
 	}
 
 	public boolean fleraSpelare(Spelare obj) {
 
 		if (obj.getLiv() == 0) {
-			System.out.println(obj.getNamn() + " Ã¤r dÃ¶d!");
+			System.out.println(obj.getNamn() + " är död!");
+			System.out.println("\n");
 			return true;
 		} else {
 			return false;
@@ -98,10 +110,11 @@ public class Spel {
 
 	public void spelaSpelPvE(int antalSpelare) {
 		nySpelare(antalSpelare);
-		int botAntal = nyBot();
+		int botAntal = nyBot(antalSpelare);
 		antalSpelare = antalSpelare + botAntal;
 		boolean c = false;
 		int i = 0;
+		int runda = 0;
 		int skepp2 = 1;
 		while (c == false) {
 			for (i = 0; i < antalSpelare; i++) {
@@ -114,28 +127,33 @@ public class Spel {
 					skepp2 = 0;
 				}
 				if (i == 0) {
-					System.out.println("Det Ã¤r " + spelarLista.get(i).getNamn() + " tur att skjuta");
-					System.out.println(spelarLista.get(i).getNamn() + "s brÃ¤de! ");
+					System.out.println("Det är " + spelarLista.get(i).getNamn() + " tur att skjuta");
+					System.out.println(spelarLista.get(i).getNamn() + "s bräde! ");
 
 					spelarLista.get(i).printBoard();
 					spelarLista.get(skepp2).printEnemyBoard();
 					x = spelarLista.get(skepp2).skjutKoordinat();
+					if (x==1) {
+						x = spelarLista.get(skepp2).skjutKoordinat()+x;
+					}
 					spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
 					System.out.println("\n");
-					System.out.println(spelarLista.get(skepp2).getLiv());
 				}
 
 				if (i == 1) {
-					System.out.println("Det Ã¤r " + spelarLista.get(i).getNamn() + " tur att skjuta");
-					System.out.println(spelarLista.get(i).getNamn() + "s brÃ¤de! ");
+					System.out.println("Det är " + spelarLista.get(i).getNamn() + " tur att skjuta");
+					System.out.println(spelarLista.get(i).getNamn() + "s bräde! ");
 
 					spelarLista.get(i).printBoard();
 					spelarLista.get(skepp2).printEnemyBoard();
 					x = spelarLista.get(skepp2).skjutKoordinat2();
+					if (x==1) {
+						x = spelarLista.get(skepp2).skjutKoordinat2()+x;
+					}
 					spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
 					System.out.println("\n");
-					System.out.println(spelarLista.get(skepp2).getLiv());
 				}
+				statistik(runda, i, skepp2);
 
 				if (fleraSpelare(spelarLista.get(skepp2)) == true) {
 					spelarLista.remove(skepp2);
@@ -147,23 +165,24 @@ public class Spel {
 				continue;
 			}
 
-			System.out.println("Runda avklarad. HÃ¤r Ã¤r listan av kvarvarande spelar och deras liv: ");
+			if (antalSpelare == 1) {
+				System.out.println(spelarLista.get(0).getNamn() + " Är vår vinnare!!!!!!!!");
+				checkHighscore(spelarLista.get(0).getNamn(), runda, spelarLista.get(0).gettotalLiv());
+				break;
+			}
+			System.out.println("Runda " + runda + " avklarad. Här är listan av kvarvarande spelar och deras liv: ");
 			System.out.println(spelarLista);
+			runda++;
 			i = 0;
 			skepp2 = 1;
 
-			if (antalSpelare == 1) {
-				System.out.println(spelarLista.get(0).getNamn() + " Ã„r vÃ¥r vinnare!!!!!!!!");
-				break;
-			}
-
 		}
+		spelarLista.clear();
 	}
 
 	public void spelaSpelEvE(int antalSpelare) {
-		Scanner scan = new Scanner(System.in);
-		int botAntal = nyBot();
-		int botAntal2 = nyBot();
+		int botAntal = nyBot(antalSpelare);
+		int botAntal2 = nyBot(antalSpelare+1);
 		botAntal = botAntal + botAntal2;
 		antalSpelare = botAntal;
 		boolean c = false;
@@ -182,16 +201,19 @@ public class Spel {
 					skepp2 = 0;
 				}
 
-				System.out.println("Det Ã¤r " + spelarLista.get(i).getNamn() + " tur att skjuta");
-				System.out.println(spelarLista.get(i).getNamn() + "s brÃ¤de! ");
+				System.out.println("Det är " + spelarLista.get(i).getNamn() + " tur att skjuta");
+				System.out.println(spelarLista.get(i).getNamn() + "s bräde! ");
 
 				spelarLista.get(i).printBoard();
 				spelarLista.get(skepp2).printEnemyBoard();
 				x = spelarLista.get(skepp2).skjutKoordinat2();
+				if (x==1) {
+					x = spelarLista.get(skepp2).skjutKoordinat2()+x;
+				}
 				spelarLista.get(skepp2).setLiv(spelarLista.get(skepp2).getLiv() - x);
+
+				statistik(runda, i, skepp2);
 				System.out.println("\n");
-				
-				System.out.println(spelarLista.get(skepp2).getLiv());
 				if (fleraSpelare(spelarLista.get(skepp2)) == true) {
 					spelarLista.remove(skepp2);
 					antalSpelare--;
@@ -201,38 +223,101 @@ public class Spel {
 				skepp2 = skepp2 + 1;
 				continue;
 			}
-			runda++;
-			System.out.println("Runda " + runda + " avklarad. HÃ¤r Ã¤r listan av kvarvarande spelar och deras liv: ");
-			System.out.println(spelarLista);
-			//statistik(runda,i,skepp2);
-			i = 0;
-			skepp2 = 1;
 
 			if (antalSpelare == 1) {
 				System.out.println(
-						spelarLista.get(0).getNamn() + " Ã„r vÃ¥r vinnare!!!!!!!! Det tog " + runda + " rundor!");
-
+						spelarLista.get(0).getNamn() + " Är vår vinnare!!!!!!!! Det tog " + runda + " rundor!");
+				checkHighscore(spelarLista.get(0).getNamn(), runda, spelarLista.get(0).gettotalLiv());
 				break;
-			}
-			else {
-				if (spelarLista.get(0).getTrÃ¤ffar()>spelarLista.get(1).getTrÃ¤ffar()) {
+			} else if (runda == 100) {
+				if (spelarLista.get(0).getTräffar() > spelarLista.get(1).getTräffar()) {
 					System.out.println("Spelare " + spelarLista.get(0) + " Vann!");
-				}
-				else {
-					System.out.println("Spelare " + spelarLista.get(1)+ " Vann!");
+					checkHighscore(spelarLista.get(0).getNamn(), runda, spelarLista.get(0).gettotalLiv());
+
+				} else {
+					System.out.println("Spelare " + spelarLista.get(1) + " Vann!");
+					checkHighscore(spelarLista.get(1).getNamn(), runda, spelarLista.get(0).gettotalLiv());
+					break;
 				}
 			}
-			
 
+			System.out.println("Runda " + runda + " avklarad. Här är listan av kvarvarande spelar och deras liv: ");
+			System.out.println(spelarLista);
+			runda++;
+
+			i = 0;
+			skepp2 = 1;
+
+		}
+		spelarLista.clear();
+
+	}
+
+	private void checkHighscore(String winner, int runda, int maxliv) {
+		ArrayList<Highscore> currentHighscore = readhighscore();
+		if (currentHighscore.isEmpty() || currentHighscore.size() < 11) {
+			currentHighscore.add(new Highscore(winner, runda, maxliv));
+			Collections.sort(currentHighscore);
+			printToHighscore(currentHighscore);
+		} else {
+			int worstHighscore = currentHighscore.get(currentHighscore.size() - 1).runda();
+			if (runda <= worstHighscore) {
+				currentHighscore.add(new Highscore(winner, runda, maxliv));
+				Collections.sort(currentHighscore);
+				printToHighscore(currentHighscore);
+			}
 		}
 	}
 
-	public int nyBot() {
-		String namn = "COM1";
+	private void printToHighscore(ArrayList<Highscore> highscore) {
+		try {
+			PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("highscore.txt", false)));
+			int i = 0;
+			for (Highscore entry : highscore) {
+				// Fugly way of breaking the highscore-writing after 10 entries
+				if (i == 10) {
+					break;
+				}
+				writer.append(entry.winner() + ";" + entry.runda() + ";" + entry.maxLiv() + "\n");
+				i++;
+
+			}
+			writer.close();
+		} catch (IOException e) {
+			System.out.println("highscore.txt hittades inte. Skapar filen.");
+		}
+	}
+
+	public ArrayList<Highscore> readhighscore() {
+		ArrayList<Highscore> highscore = new ArrayList<Highscore>();
+		System.out.println(highscore);
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("highscore.txt"));
+			String line = br.readLine();
+
+			while (line != null) {
+				String[] score = line.split(";");
+				highscore.add(new Highscore(score[0], Integer.parseInt(score[1]), Integer.parseInt(score[2])));
+				line = br.readLine();
+			}
+
+			br.close();
+			Collections.sort(highscore);
+
+		} catch (IOException e) {
+			System.out.println("Hittade inte highscore.txt");
+		}
+
+		return highscore;
+	}
+
+	public int nyBot(int spelarAntal) {
+		String c = Integer.toString(spelarAntal);
+		String namn = ("COM" + c);
 		int liv = 0;
-		int trÃ¤ffar = 0;
+		int träffar = 0;
 		int totalLiv = 0;
-		Spelare spelare = new Spelare(liv, namn,trÃ¤ffar,totalLiv);
+		Spelare spelare = new Spelare(liv, namn, träffar, totalLiv);
 		spelare.newBoard();
 		spelare.newEnemyBoard();
 		if (spelarLista.isEmpty()) {
@@ -247,19 +332,22 @@ public class Spel {
 		spelare.setLiv(spelare.spelareLiv());
 		spelare.settotalLiv(spelare.getLiv());
 		spelare.placeraSkepp2();
+		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");
+		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");
 		return 1;
 
 	}
 
 	public void nySpelare(int spelarNummer) {
+		@SuppressWarnings("resource")
 		Scanner scan = new Scanner(System.in);
 		for (int i = 1; i <= spelarNummer; i++) {
-			System.out.println("VÃ¤lj namn spelare " + i + "!");
+			System.out.println("Välj namn spelare " + i + "!");
 			String namn = scan.nextLine();
 			int liv = 0;
-			int trÃ¤ffar = 0;
+			int träffar = 0;
 			int totalLiv = 0;
-			Spelare spelare = new Spelare(liv, namn,trÃ¤ffar,totalLiv);
+			Spelare spelare = new Spelare(liv, namn, träffar, totalLiv);
 			spelare.newBoard();
 			spelare.newEnemyBoard();
 			if (spelarLista.isEmpty()) {
@@ -272,21 +360,31 @@ public class Spel {
 			spelarLista.add(spelare);
 			spelare.setLiv(spelare.spelareLiv());
 			spelare.settotalLiv(spelare.getLiv());
-			spelare.placeraSkepp();
+			System.out.println(
+					"Vill du placera båtarna själv? Skriv Ja för att göra det själv och Nej för att automatisera det");
+			String svar = scan.nextLine();
+			if (svar.contentEquals("Ja") || svar.contentEquals("ja")) {
+				spelare.placeraSkepp();
+			} else {
+				spelare.placeraSkepp2();
+			}
+			System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");
+			System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");		System.out.println("\n");System.out.println("\n");
 		}
+
 	}
 
-	private void statistik(int runda, int i,int skepp2) {
+	private void statistik(int runda, int i, int skepp2) {
 		System.out.println();
-		System.out.println("Statistik runda " + runda);
 		// player1
 		System.out.println();
 		System.out.println(spelarLista.get(i).getNamn());
-		System.out.println("TrÃ¤ffprocent: " + (float) spelarLista.get(i).getTrÃ¤ffar()*100/runda);
-		//System.out.println("TrÃ¤ffprocent: " + (float) (spelarLista.get(skepp2).spelareLiv() - spelarLista.get(skepp2).getLiv()) * 100 / runda);
+		System.out.println("Träffprocent: " + (float) spelarLista.get(i).getTräffar() * 100 / runda);
+		// System.out.println("Träffprocent: " + (float)
+		// (spelarLista.get(skepp2).spelareLiv() - spelarLista.get(skepp2).getLiv()) *
+		// 100 / runda);
 		System.out.println(
-				"Skadeprocent: " + (float) spelarLista.get(i).getLiv()*100/ spelarLista.get(i).gettotalLiv());
+				"Skadeprocent: " + (float) spelarLista.get(i).getLiv() * 100 / spelarLista.get(i).gettotalLiv());
 
 	}
-
 }

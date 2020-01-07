@@ -16,19 +16,7 @@ public class Spelplan {
 		return map.get(nyckel);
 	}
 	
-	/*public void skapaSkepp(){
-		
-		System.out.println("Här skapar du fler skepp!");
-		System.out.println("Här kan du skapa ett skepp. Vilken storlek vill du ha?");
-		int storlek2 = scan.nextInt();
-		skepp.setStorlek(storlek2);
-		scan.nextLine();
-		System.out.println("Vad ska skeppet heta?");
-		String namn2 = scan.nextLine();
-		skepp.setNamn(namn2);
-		Skepp.addSkepp(skepp);
-		Skepp.printSkepp();
-	}*/
+	
 	
 	public void printBoard() {
 		
@@ -73,7 +61,7 @@ public class Spelplan {
 	}
 	
 	public boolean riktning() {
-		System.out.println("Ange h för horisontellt eller v för vertikalt: ");
+		System.out.println("Ange h f�r horisontellt eller v f�r vertikalt: ");
 		Scanner scan = new Scanner(System.in);
 		String val = scan.nextLine();
 		if (val =="h") {
